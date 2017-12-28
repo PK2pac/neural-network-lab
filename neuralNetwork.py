@@ -4,13 +4,13 @@ import scipy.special
 import matplotlib.pyplot as plt
 
 
-class neuralNetwork:
-    def __init__(self, inputNodes, hiddenNodes, outputNodes, learningRate):
-        self.inodes = inputNodes
-        self.hnodes = hiddenNodes
-        self.onodes = outputNodes
+class NeuralNetwork:
+    def __init__(self, input_nodes, hidden_nodes, output_nodes, learning_rate):
+        self.inodes = input_nodes
+        self.hnodes = hidden_nodes
+        self.onodes = output_nodes
 
-        self.lr = learningRate
+        self.lr = learning_rate
 
         # Initialize random weights
         self.wih = np.random.normal(0.0, pow(self.hnodes, -0.5), (self.hnodes, self.inodes))
@@ -71,7 +71,7 @@ input_nodes = 784
 hidden_nodes = 1
 output_nodes = 10
 learning_rate = 0.01
-n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+n = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
 data_file = open('mnist_train.csv', 'r')
 data_list = data_file.readlines()
 print(data_list)
@@ -101,14 +101,14 @@ for record in test_data_list:
     all_values = record.split(',')
 
     correct_label = int(all_values[0])
-    print(correct_label, "правильный ответ")
+    print(correct_label, "Right")
 
     # normalize the image bits in the range [0.0;1.0]
     inputs = (np.asfarray(all_values[1:]))
     outputs = n.query(inputs)
     # pull out the element to which the network gave the highest priority
     label = np.argmax(outputs)
-    print(label, "ответ нс")
+    print(label, "Answer of neural network")
 
     if label == correct_label:
         scorecard.append(1)

@@ -1,5 +1,4 @@
 import time
-
 import numpy as np
 import scipy.special
 import matplotlib.pyplot as plt
@@ -13,7 +12,7 @@ class neuralNetwork:
 
         self.lr = learningRate
 
-        # инициализируем случайные веса
+        # Initialize random weights
         self.wih = np.random.normal(0.0, pow(self.hnodes, -0.5), (self.hnodes, self.inodes))
         self.who = np.random.normal(0.0, pow(self.onodes, -0.5), (self.onodes, self.hnodes))
 
@@ -21,49 +20,49 @@ class neuralNetwork:
         pass
 
     def train(self, inputs_list, targets_list):
-        # вход и целевое переводим в двумерный массив
+        # Input and target to 2-d array
         inputs = np.array(inputs_list, ndmin=2).T
         targets = np.array(targets_list, ndmin=2).T
 
-        # рассчитаем сигналы, входящие в скрытый слой
+        # Calculate input signals, included in the hidden layer
         hidden_inputs = np.dot(self.wih, inputs)
-        # рассчитаем сигналы, выходящие из скрытого слоя
+        # calculate the signals coming out of the hidden layer
         hidden_outputs = self.activation_function(hidden_inputs)
 
-        # рассчитаем сигналы, входящие в скрытый слой
+        # calculate the signals included in the hidden layer
         final_inputs = np.dot(self.who, hidden_outputs)
 
-        # рассчитаем сигналы, выходящие из скрытого слоя
+        # calculate the signals coming out of the hidden layer
         final_outputs = self.activation_function(final_inputs)
 
-        # посчитаем ошибку
+        # calculate the error
         output_errors = targets - final_outputs
 
-        # разделение по весам
+        # separation by weight
         hidden_errors = np.dot(self.who.T, output_errors)
 
-        # обновить веса между скрытым и внешним слоем
+        # update the weights between the hidden and outer layer
         self.who += self.lr * np.dot((output_errors * final_outputs * (1.00 - final_outputs)),
                                      np.transpose(hidden_outputs))
 
-        # обновить веса между входящим и скрытым
+        # update weights between incoming and hidden
         self.wih += self.lr * np.dot((hidden_errors * hidden_outputs * (1.00 - hidden_outputs)), np.transpose(inputs))
         pass
 
     def query(self, inputs_list):
-        # переведем входные данные в двумерный массив
+        # translate the input data into a two-dimensional array
         inputs = np.array(inputs_list, ndmin=2).T
 
-        # вычислим сигналы для скрытого слоя
+        # calculate the signals for the hidden layer
         hidden_inputs = np.dot(self.wih, inputs)
 
-        # вычислим сигналы, выходящие из скрытого слоя
+        # calculate signals emanating from the hidden layer
         hidden_outputs = self.activation_function(hidden_inputs)
 
-        # вычислим сигналы для выходного слоя
+        # calculate the signals for the output layer
         final_inputs = np.dot(self.who, hidden_outputs)
 
-        # вычислим сигналы, выходящие из выходного слоя
+        # calculate the signals coming out of the output layer
         final_outputs = self.activation_function(final_inputs)
         return final_outputs
 
@@ -89,8 +88,8 @@ for e in range(epochs):
         pass
     pass
 
-# проверим сеть
-scorecard = []  # здесь соберем верные ответы
+# Check the network
+scorecard = []  # collect the right answers
 test_data_file = open('mnist_test.csv', 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
@@ -104,10 +103,10 @@ for record in test_data_list:
     correct_label = int(all_values[0])
     print(correct_label, "правильный ответ")
 
-    # нормализуем биты изображения в диапозон [0.0;1.0]
+    # normalize the image bits in the range [0.0;1.0]
     inputs = (np.asfarray(all_values[1:]))
     outputs = n.query(inputs)
-    # вытащим тот элементик, которому сеть дала наибольший приоритет
+    # pull out the element to which the network gave the highest priority
     label = np.argmax(outputs)
     print(label, "ответ нс")
 
@@ -116,6 +115,6 @@ for record in test_data_list:
     else:
         scorecard.append(0)
         pass
-# покажем эффективность разработанной нс
+# show the effectiveness of the developed neural network
 scorecard_array = np.asarray(scorecard)
 print(scorecard_array.sum() / scorecard_array.size)
